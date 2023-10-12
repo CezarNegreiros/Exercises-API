@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2016", //versão do JS usada
+    "module": "commonjs",
+    "rootDir": "./src/", //Onde estão os arquivos TS
+    "moduleResolution": "node", 
+    "baseUrl": ".",
+    "outDir": "./dist/", //Onde estão os arquivos JS após transpilação
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "ts-node": { "transpileOnly": true }
+}
