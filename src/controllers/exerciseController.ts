@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import Exercise from "../models/exercise";
 import exerciseRepository from "../repositories/exerciseRepository";
 
-async function getExercisesByName(req: Request, res: Response){
-    const name = req.params.name;
-    const exercise = await exerciseRepository.getExercisesByName(name);
+async function getExercisesByMuscle(req: Request, res: Response){
+    const muscle = req.params.muscle;
+    const exercise = await exerciseRepository.getExercisesByMuscle(muscle);
     if(exercise){
         res.json(exercise)
     }else{
@@ -22,7 +22,7 @@ async function getExercises(req: Request, res: Response){
 }
 
 async function postExercise(req: Request, res: Response){
-    const exercise = req.body as Exercise;
+    const exercise: Exercise = req.body;
     const result = await exerciseRepository.addExercise(exercise);
 
     if(result){
@@ -44,7 +44,7 @@ async function deleteExercise(req: Request, res: Response){
 }
 
 export default{
-    getExercisesByName,
+    getExercisesByMuscle,
     getExercises,
     postExercise,
     deleteExercise

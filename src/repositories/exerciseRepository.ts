@@ -1,10 +1,23 @@
 import Exercise from "../models/exercise";
 
-const exercises: Exercise[] = [];
+const exercises: Exercise[] = [
+    {
+        name: 'rosca direta',
+        type: 'Strength',
+        muscle: 'Biceps',
+        difficulty: 'Beginner'
+    },
+    {
+        name: 'remada alta',
+        type: 'Strength',
+        muscle: 'Costas',
+        difficulty: 'Beginner'
+    }
+];
 
-async function getExercisesByName(name: string): Promise<Exercise | undefined>{
+async function getExercisesByMuscle(muscle: string): Promise<Exercise | undefined>{
     return new Promise((resolve, reject) => {
-        return resolve(exercises.find(e => e.name === name));
+        return resolve(exercises.find(e => e.muscle === muscle));
     })
 }
 
@@ -16,7 +29,7 @@ async function getExercises(): Promise<Exercise[]>{
 
 async function addExercise(exercise: Exercise): Promise<Exercise>{
     return new Promise((resolve, reject) => {
-        if(!exercise.name || !exercise.muscle || !exercise.type || exercise.difficulty){
+        if(!exercise.name || !exercise.muscle || !exercise.type || !exercise.difficulty){
             return reject(new Error('Invalid Exercise'));
         }
 
@@ -40,7 +53,7 @@ async function deleteExercise(name: string): Promise<boolean>{
 }
 
 export default{
-    getExercisesByName,
+    getExercisesByMuscle,
     getExercises,
     addExercise,
     deleteExercise
