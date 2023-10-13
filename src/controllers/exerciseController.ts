@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Exercise from "src/models/exercise";
-import exerciseRepository from "src/repositories/exerciseRepository";
+import Exercise from "../models/exercise";
+import exerciseRepository from "../repositories/exerciseRepository";
 
 async function getExercisesByName(req: Request, res: Response){
     const name = req.params.name;
