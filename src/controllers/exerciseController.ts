@@ -32,9 +32,21 @@ async function postExercise(req: Request, res: Response){
     }
 }
 
+async function patchExercise(req: Request, res: Response){
+    const id = req.params.id;
+    const exercise: Exercise = req.body;
+    const result = await exerciseRepository.updateExercise(parseInt(id), exercise);
+
+    if(result){
+        res.json(result);
+    }else{
+        res.sendStatus(404);
+    }
+}
+
 async function deleteExercise(req: Request, res: Response){
-    const name = req.params.name;
-    const success = await exerciseRepository.deleteExercise(name)
+    const id = req.params.id;
+    const success = await exerciseRepository.deleteExercise(parseInt(id))
 
     if(success){
         res.sendStatus(204)
@@ -47,5 +59,6 @@ export default{
     getExercisesByMuscle,
     getExercises,
     postExercise,
+    patchExercise,
     deleteExercise
 }
