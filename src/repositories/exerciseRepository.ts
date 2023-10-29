@@ -1,4 +1,5 @@
 import Exercise from "../models/exercise";
+const { getConnection } = require('../storage/db')
 
 const exercises: Exercise[] = [
     {
@@ -17,80 +18,46 @@ const exercises: Exercise[] = [
     }
 ];
 
-async function getExercisesByMuscle(muscle: string): Promise<Exercise | undefined>{
-    return new Promise((resolve, reject) => {
-        return resolve(exercises.find(e => e.muscle === muscle));
-    })
+async function getExercisesByMuscle(muscle: string){
+    const conn = await getConnection();
+    return await conn.get(`SELECT * FROM exercises WHERE muscle = ?`, muscle)
 }
 
-async function getExercises(): Promise<Exercise[]>{
-    return  new Promise((resolve, reject) =>{
-        return resolve(exercises);
-    })
+async function getExercises(){
+    const conn = await getConnection();
+    return await conn.all(`SELECT * FROM exercises`)
 }
 
-async function addExercise(exercise: Exercise): Promise<Exercise>{
-    return new Promise((resolve, reject) => {
-        if(!exercise.name || !exercise.muscle || !exercise.type || !exercise.difficulty){
-            return reject(new Error('Invalid Exercise'));
-        }
-
-        const newExercise = new Exercise(exercise.name, exercise.type, exercise.muscle, exercise.difficulty);
-        exercises.push(newExercise);
-
-        return resolve(newExercise);
-    })
+async function addExercise(exercise: Exercise){
+    const conn = await getConnection();
+    const result = await conn.run(`INSERT INTO exercises (name, type, muscle, difficulty) VALUES (?, ?, ?, ?)`, exercise.name, exercise.type, exercise.muscle, exercise.difficulty)
+    
+    return result
 }
 
-async function updateExercise(id: number, exercise: Exercise): Promise<Exercise | undefined>{
-        return new Promise((resolve, reject) => {
-            const index = exercises.findIndex(e => e.id === id);
+async function updateExerciseDifficulty(id: number, exercise: Exercise){
+    const conn = await getConnection()
+    const result = await conn.run(`UPDATE exercises SET difficulty = ? WHERE id = ?`, exercise.difficulty, id)
 
-            if(index >= 0){
-
-                if(exercise.id && exercises[index].id !== exercise.id){
-                    exercises[index].id = exercise.id
-                }
-                if(exercise.muscle && exercises[index].muscle !== exercise.muscle){
-                    exercises[index].muscle = exercise.muscle
-                }
-
-                if(exercise.name && exercises[index].name !== exercise.name){
-                    exercises[index].name = exercise.name
-                }
-
-                if(exercise.type && exercises[index].type !== exercise.type){
-                    exercises[index].type = exercise.type
-                }
-
-                if(exercise.difficulty && exercises[index].difficulty !== exercise.difficulty){
-                    exercises[index].difficulty = exercise.difficulty
-                }
-
-                return resolve(exercises[index])
-            }
-
-            return resolve(undefined)
-        })
+    return result
     }
 
-async function deleteExercise(id: number): Promise<boolean>{
-    return new Promise((resolve, reject) => {
-        const index = exercises.findIndex(e => e.id === id);
-        if(index >= 0){
-            exercises.splice(index, 1)
-            return resolve(true)
-        }
+async function deleteExercise(id: number){
+    const conn = await getConnection()
+    const result = conn.get(`DELETE FROM exercises WHERE id = ?`, id)
+   
+    if(result != null){
+        return true
+    }
 
-        return resolve(false)
-    })
+    return false
 }
 
 export default{
     getExercisesByMuscle,
     getExercises,
     addExercise,
-    updateExercise,
+    updateExerciseDifficulty,
     deleteExercise
 }
 

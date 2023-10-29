@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import Exercise from "../models/exercise";
 import exerciseRepository from "../repositories/exerciseRepository";
 
@@ -32,10 +32,10 @@ async function postExercise(req: Request, res: Response){
     }
 }
 
-async function patchExercise(req: Request, res: Response){
+async function patchExerciseDifficulty(req: Request, res: Response){
     const id = req.params.id;
     const exercise: Exercise = req.body;
-    const result = await exerciseRepository.updateExercise(parseInt(id), exercise);
+    const result = await exerciseRepository.updateExerciseDifficulty(parseInt(id), exercise);
 
     if(result){
         res.json(result);
@@ -59,6 +59,6 @@ export default{
     getExercisesByMuscle,
     getExercises,
     postExercise,
-    patchExercise,
+    patchExerciseDifficulty,
     deleteExercise
 }
